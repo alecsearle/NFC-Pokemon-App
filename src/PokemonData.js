@@ -11,6 +11,7 @@ const Type = {
 
 const PokemonList = [
   {
+    no: 1,
     name: "Bulbasaur",
     description: "Awesome pokemon",
     type: [Type.Grass, Type.Poison],
@@ -22,6 +23,7 @@ const PokemonList = [
     spd: 3,
   },
   {
+    no: 4,
     name: "Charmander",
     description: "Awesome pokemon",
     type: [Type.Fire],
@@ -33,6 +35,7 @@ const PokemonList = [
     spd: 4,
   },
   {
+    no: 7,
     name: "Squirtle",
     description: "Awesome pokemon",
     type: [Type.Water],
@@ -44,17 +47,19 @@ const PokemonList = [
     spd: 3,
   },
   {
+    no: 25,
     name: "Pikachu",
     description: "Awesome pokemon",
     type: [Type.Electric],
     hp: 3,
     atk: 4,
     def: 3,
-    satk: 4,
+    satk: 3,
     sdef: 3,
-    spd: 4,
+    spd: 6,
   },
   {
+    no: 50,
     name: "Diglett",
     description: "Awesome pokemon",
     type: [Type.Ground],
@@ -66,6 +71,7 @@ const PokemonList = [
     spd: 4,
   },
   {
+    no: 10,
     name: "Caterpie",
     description: "Awesome pokemon",
     type: [Type.Bug],
@@ -77,6 +83,7 @@ const PokemonList = [
     spd: 3,
   },
   {
+    no: 74,
     name: "Geodude",
     description: "Awesome pokemon",
     type: [Type.Rock, Type.Ground],
@@ -88,3 +95,5 @@ const PokemonList = [
     spd: 2,
   },
 ];
+
+export { PokemonList, Type };

@@ -1,5 +1,6 @@
 import NfcManager from "react-native-nfc-manager";
 import * as HexUtils from "../Utils/HexUtils";
+import * as Signer from "../Utils/Signer";
 
 async function verifySignature(pokemonBytes) {
   const tag = await NfcManager.getTag();
@@ -27,4 +28,5 @@ async function verifySignature(pokemonBytes) {
   return result;
 }
 
+export { verifySignature };
 export default verifySignature;

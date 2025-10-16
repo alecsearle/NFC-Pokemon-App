@@ -1,8 +1,19 @@
 import React from "react";
-import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import NfcManager, { NfcTech } from "react-native-nfc-manager";
-import { Button } from "react-native-paper";
 import AndroidPrompt from "../Components/AndroidPrompt";
+import { readPokemon } from "../NfcUtils/readPokemon";
+import { verifySignature } from "../NfcUtils/verifySignature";
 
 function HomeScreen(props) {
   const { navigation } = props;
@@ -94,33 +105,45 @@ function HomeScreen(props) {
 
     return (
       <View style={styles.bottom}>
-        <Button
-          mode="contained"
-          style={[styles.btn]}
+        <TouchableOpacity
+          style={[styles.btn, styles.createBtn]}
           onPress={() => {
-            readNdef();
+            navigation.navigate("Selection");
           }}
+          activeOpacity={0.8}
         >
-          IDENTIFY POKEMON
-        </Button>
-        <Button
-          mode="contained"
-          style={[styles.btn]}
+          <View style={styles.btnContent}>
+            <Text style={styles.btnText}>CREATE POKEMON</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.btn, styles.identifyBtn]}
           onPress={async () => {
             try {
               await NfcManager.requestTechnology(NfcTech.NfcA);
-              await ensurePasswordProtection();
-              const pokemonBytes = await writePokemon(pokemon);
-              await writeSignature(pokemonBytes);
+              const [pokemon, pokemonBytes] = await readPokemon();
+              const result = await verifySignature(pokemonBytes);
+              if (result) {
+                navigation.navigate("Detail", {
+                  pokemon,
+                });
+              } else {
+                Alert.alert("Error", "Signature Validation Failed", [{ text: "OK" }]);
+              }
             } catch (ex) {
               console.warn(ex);
             } finally {
               NfcManager.cancelTechnologyRequest();
             }
           }}
+          activeOpacity={0.8}
         >
-          CREATE POKEMON
-        </Button>
+          <View style={styles.btnContent}>
+            <Text style={styles.btnText}>IDENTIFY POKEMON</Text>
+          </View>
+        </TouchableOpacity>
+
         <AndroidPrompt
           ref={androidPromptRef}
           onCancelPress={() => {
@@ -133,8 +156,12 @@ function HomeScreen(props) {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.bannerText}>Tap-And-Go</Text>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require("../../assets/images/pokemon/pokeball.png")}
+          style={styles.pokeballImage}
+        />
+        <Text style={styles.bannerText}>NFC Pokemon</Text>
       </View>
       {renderNfcButtons()}
     </View>
@@ -146,18 +173,62 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#f8f8f8",
+  },
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  pokeballImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
   },
   bannerText: {
     fontSize: 42,
     textAlign: "center",
+    fontWeight: "bold",
+    color: "#333",
   },
   bottom: {
     paddingHorizontal: 20,
     paddingVertical: 40,
+    alignItems: "center",
   },
   btn: {
-    width: 250,
-    marginBottom: 15,
+    width: 280,
+    marginBottom: 20,
+    borderRadius: 15,
+    paddingVertical: 18,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  createBtn: {
+    backgroundColor: "#FF6B6B",
+  },
+  identifyBtn: {
+    backgroundColor: "#4ECDC4",
+  },
+  btnContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnIcon: {
+    fontSize: 24,
+    marginRight: 10,
+  },
+  btnText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    letterSpacing: 1,
   },
 });
 

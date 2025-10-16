@@ -45,4 +45,5 @@ async function readPokemon() {
   return [pokemon, tagData];
 }
 
+export { readPokemon };
 export default readPokemon;

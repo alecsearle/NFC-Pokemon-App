@@ -20,4 +20,5 @@ async function writeSignature(pokemonBytes) {
   }
 }
 
+export { writeSignature };
 export default writeSignature;

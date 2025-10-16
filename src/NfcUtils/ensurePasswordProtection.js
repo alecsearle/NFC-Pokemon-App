@@ -45,7 +45,7 @@ async function ensurePasswordProtection() {
     ]);
     console.warn(writeRespBytes);
 
-    writeRespBytes = awaitNfcManager.nfcAHandler.transceive([
+    writeRespBytes = await NfcManager.nfcAHandler.transceive([
       0xa2,
       authPageIdx,
       respBytes[0],
@@ -63,3 +63,6 @@ async function ensurePasswordProtection() {
     }
   }
 }
+
+export { ensurePasswordProtection };
+export default ensurePasswordProtection;
